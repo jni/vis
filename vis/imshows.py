@@ -54,7 +54,7 @@ def _factors(n):
     >>> _factors(20)
     [2, 4, 5, 10]
     """
-    fs = filter(lambda i: (n % i == 0), range(2, n // 2))
+    fs = filter(lambda i: (n % i == 0), range(2, 1 + n/2))
     return fs
 
 
@@ -76,7 +76,7 @@ def rshow(values):
     if len(fs) == 0:
         values_im = values.reshape((1, n))
     else:
-        j = len(fs) // 2
-        values_im = values.reshape((fs[j], fs[j+1]))
-    return cshow(values_im)
+        new_shape = (-1, fs[k // 2])
+        values_im = values.reshape(new_shape)
+        return cshow(values_im)
 
