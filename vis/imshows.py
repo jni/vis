@@ -33,3 +33,50 @@ def cshow(im):
         ax = plt.imshow(im, cmap=cm.cubehelix, interpolation='nearest')
     return ax
 
+
+def _factors(n):
+    """Return integer factors of `n`, not including 1 or `n`.
+
+    Parameters
+    ----------
+    n : int
+        Integer for which we want a factorization.
+
+    Returns
+    -------
+    fs : list of int
+        The list of factors of `n` (empty if `n` is prime).
+
+    Examples
+    --------
+    >>> _factors(10)
+    [2, 5]
+    >>> _factors(20)
+    [2, 4, 5, 10]
+    """
+    fs = filter(lambda i: (n % i == 0), range(2, n // 2))
+    return fs
+
+
+def rshow(values):
+    """Show a 1D vector of values in a rectangular grid.
+
+    Parameters
+    ----------
+    values : 1D array
+        The values to be plotted.
+
+    Returns
+    -------
+    ax : matplotlib AxesImage object
+        The figure axes.
+    """
+    n = len(values)
+    fs = _factors(n)
+    if len(fs) == 0:
+        values_im = values.reshape((1, n))
+    else:
+        j = len(fs) // 2
+        values_im = values.reshape((fs[j], fs[j+1]))
+    return cshow(values_im)
+

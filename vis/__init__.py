@@ -1,4 +1,4 @@
-from .imshows import cshow
+from .imshows import cshow, rshow
 
-__all__ = ['cshow']
+__all__ = ['cshow', 'rshow']
 
