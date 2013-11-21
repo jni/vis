@@ -1,0 +1,7 @@
+Name: vis
+Author: Juan Nunez-Iglesias <juan.n@unimelb.edu.au>
+Summary: Visualisation for Python
+
+Library:
+    Packages: vis
+
