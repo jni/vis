@@ -70,11 +70,16 @@ def rshow(values):
     -------
     ax : matplotlib AxesImage object
         The figure axes.
+
+    Notes
+    -----
+    If the number of values is prime, rshow will revert to a line plot.
     """
     n = len(values)
     fs = _factors(n)
-    if len(fs) == 0:
-        values_im = values.reshape((1, n))
+    k = len(fs)
+    if k == 0:
+        return plt.plot(values)
     else:
         new_shape = (-1, fs[k // 2])
         values_im = values.reshape(new_shape)
