@@ -2,6 +2,7 @@
 imshows.py: wrappers around matplotlib.pyplot.imshow with saner
 defaults for 3D scientific images.
 """
+import numpy as np
 from matplotlib import pyplot as plt, cm
 
 
@@ -84,4 +85,24 @@ def rshow(values):
         new_shape = (-1, fs[k // 2])
         values_im = values.reshape(new_shape)
         return cshow(values_im)
+
+
+def nshow(im):
+    """Show an image after normalising each channel to [0, 255] uint8.
+
+    Parameters
+    ----------
+    im : array
+        The input image.
+
+    Returns
+    -------
+    ax : matplotlib AxesImage oject
+        The figure axes.
+    """
+    channel_mins = im.min(axis=0).min(axis=0)[np.newaxis, np.newaxis, :]
+    channel_maxs = im.max(axis=0).max(axis=0)[np.newaxis, np.newaxis, :]
+    im_out = (im.astype(float) - channel_mins) / (channel_maxs - channel_mins)
+    ax = plt.imshow(im_out)
+    return ax
 
