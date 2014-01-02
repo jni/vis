@@ -3,7 +3,8 @@ imshows.py: wrappers around matplotlib.pyplot.imshow with saner
 defaults for 3D scientific images.
 """
 import numpy as np
-from matplotlib import pyplot as plt, cm
+from matplotlib import pyplot as plt, cm, colors
+from skimage import color
 
 
 def cshow(im):
@@ -104,5 +105,34 @@ def nshow(im):
     channel_maxs = im.max(axis=0).max(axis=0)[np.newaxis, np.newaxis, :]
     im_out = (im.astype(float) - channel_mins) / (channel_maxs - channel_mins)
     ax = plt.imshow(im_out)
+    return ax
+
+
+def sshow(im, labrandom=True):
+    """Show a segmentation using a random colormap.
+
+    Parameters
+    ----------
+    im : np.ndarray of int, shape (M, N)
+        The segmentation to be displayed.
+    labrandom : bool, optional
+        Use random points in the Lab colorspace instead of RGB.
+
+    Returns
+    -------
+    ax : matplotlib AxesImage object
+        The figure axes.
+    """
+    rand_colors = np.random.rand(np.ceil(im.max()), 3)
+    if labrandom:
+        rand_colors[:, 0] = rand_colors[:, 0] * 60 + 20
+        rand_colors[:, 1] = rand_colors[:, 1] * 185 - 85
+        rand_colors[:, 2] = rand_colors[:, 2] * 198 - 106
+        rand_colors = color.lab2rgb(rand_colors[np.newaxis, ...])[0]
+        rand_colors[rand_colors < 0] = 0
+        rand_colors[rand_colors > 1] = 1
+    rcmap = colors.ListedColormap(np.concatenate((np.zeros((1, 3)),
+                                                  rand_colors)))
+    ax = plt.imshow(im, cmap=rcmap, interpolation='nearest')
     return ax
 
