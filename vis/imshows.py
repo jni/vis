@@ -97,7 +97,7 @@ def nshow(im):
 
     Returns
     -------
-    ax : matplotlib AxesImage oject
+    ax : matplotlib AxesImage object
         The figure axes.
     """
     channel_mins = im.min(axis=0).min(axis=0)[np.newaxis, np.newaxis, :]
