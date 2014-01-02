@@ -109,11 +109,11 @@ def nshow(im):
 
 
 def sshow(im, labrandom=True):
-    """Show a segmentation using a random colormap.
+    """Show a segmentation (or cross-section) using a random colormap.
 
     Parameters
     ----------
-    im : np.ndarray of int, shape (M, N)
+    im : np.ndarray of int
         The segmentation to be displayed.
     labrandom : bool, optional
         Use random points in the Lab colorspace instead of RGB.
@@ -123,16 +123,20 @@ def sshow(im, labrandom=True):
     ax : matplotlib AxesImage object
         The figure axes.
     """
-    rand_colors = np.random.rand(np.ceil(im.max()), 3)
-    if labrandom:
-        rand_colors[:, 0] = rand_colors[:, 0] * 60 + 20
-        rand_colors[:, 1] = rand_colors[:, 1] * 185 - 85
-        rand_colors[:, 2] = rand_colors[:, 2] * 198 - 106
-        rand_colors = color.lab2rgb(rand_colors[np.newaxis, ...])[0]
-        rand_colors[rand_colors < 0] = 0
-        rand_colors[rand_colors > 1] = 1
-    rcmap = colors.ListedColormap(np.concatenate((np.zeros((1, 3)),
-                                                  rand_colors)))
-    ax = plt.imshow(im, cmap=rcmap, interpolation='nearest')
+    if im.ndim > 2:
+        mid = im.shape[0] // 2
+        ax = sshow(im[mid], labrandom)
+    else:
+        rand_colors = np.random.rand(np.ceil(im.max()), 3)
+        if labrandom:
+            rand_colors[:, 0] = rand_colors[:, 0] * 60 + 20
+            rand_colors[:, 1] = rand_colors[:, 1] * 185 - 85
+            rand_colors[:, 2] = rand_colors[:, 2] * 198 - 106
+            rand_colors = color.lab2rgb(rand_colors[np.newaxis, ...])[0]
+            rand_colors[rand_colors < 0] = 0
+            rand_colors[rand_colors > 1] = 1
+        rcmap = colors.ListedColormap(np.concatenate((np.zeros((1, 3)),
+                                                      rand_colors)))
+        ax = plt.imshow(im, cmap=rcmap, interpolation='nearest')
     return ax
 
